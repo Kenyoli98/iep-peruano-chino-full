@@ -1,0 +1,125 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "darwin-arm64"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id                    Int                  @id @default(autoincrement())
+  nombre                String
+  apellido              String
+  email                 String               @unique
+  password              String
+  rol                   String
+  fechaNacimiento       String?
+  sexo                  String?
+  nacionalidad          String?
+  dni                   String?
+  direccion             String?
+  telefono              String?
+  nombreApoderado       String?
+  telefonoApoderado     String?
+  asignaciones          AsignacionProfesor[]
+  matriculas            Matricula[]
+  matriculasCreadas     Matricula[]          @relation("CreadoPor")
+  matriculasEliminadas  Matricula[]          @relation("EliminadoPor")
+  matriculasModificadas Matricula[]          @relation("ModificadoPor")
+  notasAlumno           Nota[]               @relation("AlumnoNotas")
+  notasProfesor         Nota[]               @relation("ProfesorNotas")
+  pensiones             Pension[]
+}
+
+model Curso {
+  id           Int                  @id @default(autoincrement())
+  nombre       String               @unique
+  descripcion  String?
+  asignaciones AsignacionProfesor[]
+}
+
+model Seccion {
+  id           Int                  @id @default(autoincrement())
+  nombre       String
+  grado        Int
+  nivel        String
+  asignaciones AsignacionProfesor[]
+
+  @@unique([nombre, grado, nivel])
+}
+
+model AsignacionProfesor {
+  id            Int       @id @default(autoincrement())
+  profesorId    Int
+  cursoId       Int
+  seccionId     Int
+  anioAcademico Int
+  curso         Curso     @relation(fields: [cursoId], references: [id])
+  profesor      Usuario   @relation(fields: [profesorId], references: [id])
+  seccion       Seccion   @relation(fields: [seccionId], references: [id])
+  horarios      Horario[]
+
+  @@index([cursoId], map: "AsignacionProfesor_cursoId_fkey")
+  @@index([profesorId], map: "AsignacionProfesor_profesorId_fkey")
+  @@index([seccionId], map: "AsignacionProfesor_seccionId_fkey")
+}
+
+model Horario {
+  id           Int                @id @default(autoincrement())
+  asignacionId Int
+  dia          String
+  horaInicio   String
+  horaFin      String
+  asignacion   AsignacionProfesor @relation(fields: [asignacionId], references: [id], onDelete: Cascade)
+
+  @@index([asignacionId], map: "Horario_asignacionId_fkey")
+}
+
+model Matricula {
+  id              Int      @id @default(autoincrement())
+  alumnoId        Int
+  grado           String
+  seccion         String
+  anioAcademico   Int
+  fechaRegistro   DateTime @default(now())
+  creadoPorId     Int
+  modificadoPorId Int?
+  eliminadoPorId  Int?
+  alumno          Usuario  @relation(fields: [alumnoId], references: [id])
+  creadoPor       Usuario  @relation("CreadoPor", fields: [creadoPorId], references: [id])
+  eliminadoPor    Usuario? @relation("EliminadoPor", fields: [eliminadoPorId], references: [id])
+  modificadoPor   Usuario? @relation("ModificadoPor", fields: [modificadoPorId], references: [id])
+
+  @@index([alumnoId], map: "Matricula_alumnoId_fkey")
+  @@index([creadoPorId], map: "Matricula_creadoPorId_fkey")
+  @@index([eliminadoPorId], map: "Matricula_eliminadoPorId_fkey")
+  @@index([modificadoPorId], map: "Matricula_modificadoPorId_fkey")
+}
+
+model Nota {
+  id           Int     @id @default(autoincrement())
+  alumnoId     Int
+  curso        String
+  bimestre     Int
+  calificacion Float
+  profesorId   Int
+  alumno       Usuario @relation("AlumnoNotas", fields: [alumnoId], references: [id])
+  profesor     Usuario @relation("ProfesorNotas", fields: [profesorId], references: [id])
+
+  @@index([alumnoId], map: "Nota_alumnoId_fkey")
+  @@index([profesorId], map: "Nota_profesorId_fkey")
+}
+
+model Pension {
+  id            Int      @id @default(autoincrement())
+  alumnoId      Int
+  mes           String
+  anio          Int
+  estadoPago    Boolean  @default(false)
+  fechaRegistro DateTime @default(now())
+  alumno        Usuario  @relation(fields: [alumnoId], references: [id])
+
+  @@index([alumnoId], map: "Pension_alumnoId_fkey")
+}

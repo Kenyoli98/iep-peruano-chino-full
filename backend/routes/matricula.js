@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { 
-  registrarMatricula, 
-  listarMatriculas, 
-  editarMatricula, 
-  eliminarMatricula 
+const {
+  registrarMatricula,
+  listarMatriculas,
+  editarMatricula,
+  eliminarMatricula
 } = require('../controllers/matriculaController');
 const verificarToken = require('../middlewares/authMiddleware');
 const permitirRoles = require('../middlewares/roleMiddleware');
@@ -19,6 +19,11 @@ router.get('/', verificarToken, permitirRoles('admin'), listarMatriculas);
 router.put('/:id', verificarToken, permitirRoles('admin'), editarMatricula);
 
 // Eliminar matrícula
-router.delete('/:id', verificarToken, permitirRoles('admin'), eliminarMatricula);
+router.delete(
+  '/:id',
+  verificarToken,
+  permitirRoles('admin'),
+  eliminarMatricula
+);
 
 module.exports = router;

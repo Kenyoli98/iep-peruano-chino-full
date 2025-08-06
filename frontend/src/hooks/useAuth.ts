@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { getAuthToken } from '../utils/auth';
 
 export function useAuth(allowedRoles: string[]): boolean | null {
   const [allowed, setAllowed] = useState<boolean | null>(null);
@@ -11,12 +12,15 @@ export function useAuth(allowedRoles: string[]): boolean | null {
   useEffect(() => {
     setMounted(true);
     if (typeof window !== 'undefined') {
-      setToken(localStorage.getItem('token') || '');
+      setToken(getAuthToken() || '');
       setRol(localStorage.getItem('rol') || '');
     }
   }, []);
 
-  const memoizedAllowedRoles = useMemo(() => allowedRoles, [allowedRoles.join(',')]);
+  const memoizedAllowedRoles = useMemo(
+    () => allowedRoles,
+    [allowedRoles.join(',')]
+  );
 
   const checkAuth = useCallback(() => {
     if (!mounted) return;
@@ -25,7 +29,9 @@ export function useAuth(allowedRoles: string[]): boolean | null {
       router.push('/login');
       return;
     }
-    if (memoizedAllowedRoles.includes(rol)) {
+    // Convertir rol a minúsculas para comparación consistente
+    const normalizedRol = rol.toLowerCase();
+    if (memoizedAllowedRoles.includes(normalizedRol)) {
       setAllowed(true);
     } else {
       setAllowed(false);

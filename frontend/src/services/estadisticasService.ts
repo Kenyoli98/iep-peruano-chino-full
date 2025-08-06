@@ -33,9 +33,9 @@ export const obtenerEstadisticas = async (): Promise<Estadisticas> => {
   } catch (error: any) {
     console.error('Error al obtener estadísticas:', error);
     throw new Error(
-      error.response?.data?.mensaje || 
-      error.message || 
-      'Error al conectar con el servidor'
+      error.response?.data?.mensaje ||
+        error.message ||
+        'Error al conectar con el servidor'
     );
   }
 };

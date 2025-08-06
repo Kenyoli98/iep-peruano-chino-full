@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { login as loginService } from '../services/auth';
 
 export default function useLogin() {
-  const [email, setEmail] = useState('');
+  const [dni, setDni] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -12,41 +12,41 @@ export default function useLogin() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const rememberedEmail = localStorage.getItem('rememberedEmail') || '';
-      setEmail(rememberedEmail);
-      setRememberMe(!!rememberedEmail);
+      const rememberedDni = localStorage.getItem('rememberedDni') || '';
+      setDni(rememberedDni);
+      setRememberMe(!!rememberedDni);
     }
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    if (!email || !password) {
-      setError('Por favor, ingresa tu correo y contraseña.');
+    if (!dni || !password) {
+      setError('Por favor, ingresa tu DNI y contraseña.');
       return;
     }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError('El formato del correo electrónico no es válido.');
+    const dniRegex = /^\d{8}$/;
+    if (!dniRegex.test(dni)) {
+      setError('El DNI debe tener exactamente 8 dígitos.');
       return;
     }
-    if (email.length > 100 || password.length > 100) {
-      setError('Correo o contraseña demasiado largos.');
+    if (dni.length > 8 || password.length > 100) {
+      setError('DNI o contraseña demasiado largos.');
       return;
     }
     setLoading(true);
     try {
-      const data = await loginService(email, password, rememberMe);
+      const data = await loginService(dni, password, rememberMe);
       if (rememberMe) {
         localStorage.setItem('token', data.token);
-        localStorage.setItem('rememberedEmail', email);
+        localStorage.setItem('rememberedDni', dni);
       } else {
         sessionStorage.setItem('token', data.token);
-        localStorage.removeItem('rememberedEmail');
+        localStorage.removeItem('rememberedDni');
       }
       localStorage.setItem('rol', data.usuario.rol);
       localStorage.setItem('nombre', data.usuario.nombre);
-      const rol = data.usuario.rol;
+      const rol = data.usuario.rol.toLowerCase(); // Convertir a minúsculas para comparación
       if (rol === 'admin') {
         router.push('/admin');
       } else if (rol === 'profesor') {
@@ -55,21 +55,23 @@ export default function useLogin() {
         router.push('/alumno/pensiones');
       }
     } catch (err: any) {
-      setError(err.error || err.message || 'Error desconocido al iniciar sesión.');
+      setError(
+        err.error || err.message || 'Error desconocido al iniciar sesión.'
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return {
-    email,
-    setEmail,
+    dni,
+    setDni,
     password,
     setPassword,
     rememberMe,
     setRememberMe,
     loading,
     error,
-    handleLogin,
+    handleLogin
   };
 }

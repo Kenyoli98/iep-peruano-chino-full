@@ -10,7 +10,11 @@ import { useAuth } from '../../hooks/useAuth';
 import { useInactivityLogout } from '../../hooks/useInactivityLogout';
 import SessionNotification from '../../components/ui/SessionNotification';
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({
+  children
+}: {
+  children: React.ReactNode;
+}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [submenuAcademicoOpen, setSubmenuAcademicoOpen] = useState(false);
   const [submenuAccesosOpen, setSubmenuAccesosOpen] = useState(false);
@@ -44,12 +48,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   function handleLogout() {
     if (typeof window !== 'undefined') {
-    localStorage.removeItem('nombre');
-    localStorage.removeItem('token');
-    localStorage.removeItem('rol');
+      localStorage.removeItem('nombre');
+      localStorage.removeItem('token');
+      localStorage.removeItem('rol');
     }
     router.push('/login');
-  };
+  }
 
   // Hook para logout automático por inactividad (60 minutos)
   const {
@@ -63,10 +67,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   });
 
   if (!mounted || allowed === null) {
-    return <div className="p-10">Cargando...</div>;
+    return <div className='p-10'>Cargando...</div>;
   }
   if (!nombre) {
-    return <div className="p-10">Cargando...</div>;
+    return <div className='p-10'>Cargando...</div>;
   }
 
   return (
@@ -92,22 +96,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       />
 
       {/* Contenido principal */}
-      <div className="flex flex-col pt-16 min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+      <div className='flex flex-col pt-16 min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100'>
         <LoadingOverlay />
-        <main className="flex-1 p-6 overflow-auto">
-          <div className="max-w-7xl mx-auto">
-            {children}
-          </div>
+        <main className='flex-1 p-6 overflow-auto'>
+          <div className='max-w-7xl mx-auto'>{children}</div>
         </main>
       </div>
-      
+
       {/* Notificación de sesión */}
       {notification.show && (
         <SessionNotification
           type={notification.type}
           message={notification.message}
-          onConfirm={notification.type === 'warning' ? handleWarningConfirm : undefined}
-          onCancel={notification.type === 'warning' ? handleWarningCancel : undefined}
+          onConfirm={
+            notification.type === 'warning' ? handleWarningConfirm : undefined
+          }
+          onCancel={
+            notification.type === 'warning' ? handleWarningCancel : undefined
+          }
           onClose={handleNotificationClose}
           autoClose={notification.type === 'expired' ? 3000 : undefined}
         />

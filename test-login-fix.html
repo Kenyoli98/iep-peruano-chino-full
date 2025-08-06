@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Login Fix - Sistema Educativo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2563eb;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        .test-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 14px;
+        }
+        .test-btn:hover {
+            background: #1d4ed8;
+        }
+        .success-box {
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .error-box {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .info-box {
+            background: #dbeafe;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Test Login Fix - Sistema Educativo</h1>
+        <p>Esta herramienta te ayudará a probar el fix del login después de completar el registro.</p>
+        
+        <div class="test-section">
+            <h3>1. Probar Login con Usuario Registrado</h3>
+            <div class="info-box">
+                <strong>Instrucciones:</strong><br>
+                • Usa un DNI de 8 dígitos de un usuario que haya completado el registro<br>
+                • Ingresa la contraseña que estableciste durante el registro<br>
+                • El sistema ahora debería permitir el acceso a usuarios con estado "completado"
+            </div>
+            
+            <label for="testDni">DNI (8 dígitos):</label>
+            <input type="text" id="testDni" placeholder="12345678" maxlength="8">
+            
+            <label for="testPassword">Contraseña:</label>
+            <input type="password" id="testPassword" placeholder="Tu contraseña">
+            
+            <button onclick="testLogin()" class="test-btn">🔑 Probar Login</button>
+            <div id="loginResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>2. Verificar Estados de Usuario</h3>
+            <button onclick="checkUserStates()" class="test-btn">📊 Verificar Estados de Usuarios</button>
+            <div id="statesResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>3. Información del Fix</h3>
+            <div class="info-box">
+                <strong>Cambios realizados:</strong><br>
+                ✅ Se agregó validación de estadoRegistro en el login<br>
+                ✅ Se permite acceso a usuarios con estado "activo" y "completado"<br>
+                ✅ Se bloquea acceso a usuarios con estados "pendiente", "suspendido", etc.<br>
+                ✅ Se verifica que el usuario tenga contraseña antes del login<br>
+                ✅ Se actualiza el último login exitoso<br>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3001';
+
+        async function testLogin() {
+            const dni = document.getElementById('testDni').value;
+            const password = document.getElementById('testPassword').value;
+            const resultDiv = document.getElementById('loginResult');
+            
+            if (!dni || !password) {
+                resultDiv.innerHTML = '<div class="error-box">Por favor ingresa DNI y contraseña</div>';
+                return;
+            }
+            
+            if (!/^\d{8}$/.test(dni)) {
+                resultDiv.innerHTML = '<div class="error-box">El DNI debe tener exactamente 8 dígitos</div>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="info-box">🔄 Probando login...</div>';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/usuarios/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        dni: dni,
+                        password: password,
+                        rememberMe: false
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="success-box">
+                            <strong>🎉 ¡Login exitoso!</strong><br>
+                            Usuario: ${data.usuario.nombre} ${data.usuario.apellido}<br>
+                            Rol: ${data.usuario.rol}<br>
+                            Email: ${data.usuario.email}<br>
+                            Token generado correctamente
+                        </div>
+                    `;
+                } else {
+                    let errorMessage = data.error || 'Error desconocido';
+                    let errorCode = data.code || 'UNKNOWN';
+                    
+                    resultDiv.innerHTML = `
+                        <div class="error-box">
+                            <strong>❌ Error en login:</strong><br>
+                            Código: ${errorCode}<br>
+                            Mensaje: ${errorMessage}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error-box">
+                        <strong>❌ Error de conexión:</strong><br>
+                        ${error.message}<br>
+                        Verifica que el servidor backend esté funcionando en ${API_BASE_URL}
+                    </div>
+                `;
+            }
+        }
+        
+        async function checkUserStates() {
+            const resultDiv = document.getElementById('statesResult');
+            resultDiv.innerHTML = '<div class="info-box">🔄 Verificando estados de usuarios...</div>';
+            
+            try {
+                // Necesitaríamos un endpoint para obtener usuarios, por ahora mostramos info
+                resultDiv.innerHTML = `
+                    <div class="info-box">
+                        <strong>Estados de usuario válidos para login:</strong><br>
+                        ✅ "activo" - Usuario completamente activo<br>
+                        ✅ "completado" - Usuario que completó el pre-registro<br>
+                        ❌ "pendiente" - Pre-registro sin completar<br>
+                        ❌ "suspendido" - Cuenta suspendida<br>
+                        ❌ "expirado" - Pre-registro expirado<br>
+                        ❌ "cancelado" - Registro cancelado<br><br>
+                        <strong>Nota:</strong> Los usuarios que completan el registro desde el pre-registro
+                        quedan con estado "completado" y ahora pueden hacer login correctamente.
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error-box">
+                        <strong>❌ Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        // Auto-llenar con datos de ejemplo si están disponibles
+        document.addEventListener('DOMContentLoaded', function() {
+            // Puedes cambiar estos valores por un DNI real de tu sistema
+            document.getElementById('testDni').value = '12345678';
+        });
+    </script>
+</body>
+</html>

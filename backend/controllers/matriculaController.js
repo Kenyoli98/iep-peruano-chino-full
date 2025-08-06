@@ -2,10 +2,12 @@ const prisma = require('../prismaClient');
 // Registrar Matrícula (con auditoría)
 async function registrarMatricula(req, res) {
   const { alumnoId, grado, seccion, anioAcademico } = req.body;
-  const creadoPorId = req.usuario.id;  // ID del usuario que crea la matrícula
+  const creadoPorId = req.usuario.id; // ID del usuario que crea la matrícula
 
   if (!alumnoId || !grado || !seccion || !anioAcademico) {
-    return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+    return res
+      .status(400)
+      .json({ error: 'Todos los campos son obligatorios.' });
   }
 
   try {
@@ -19,7 +21,9 @@ async function registrarMatricula(req, res) {
       }
     });
 
-    res.status(201).json({ mensaje: 'Matrícula registrada.', matricula: nuevaMatricula });
+    res
+      .status(201)
+      .json({ mensaje: 'Matrícula registrada.', matricula: nuevaMatricula });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al registrar la matrícula.' });
@@ -43,7 +47,10 @@ async function editarMatricula(req, res) {
       }
     });
 
-    res.json({ mensaje: 'Matrícula actualizada.', matricula: matriculaActualizada });
+    res.json({
+      mensaje: 'Matrícula actualizada.',
+      matricula: matriculaActualizada
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al actualizar la matrícula.' });

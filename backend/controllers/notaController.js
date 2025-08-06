@@ -5,7 +5,9 @@ async function registrarNota(req, res) {
   const profesorId = req.usuario.id; // Sacamos el id del profesor desde el token
 
   if (!alumnoId || !curso || !bimestre || !calificacion || !anioAcademico) {
-    return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+    return res
+      .status(400)
+      .json({ error: 'Todos los campos son obligatorios.' });
   }
 
   // Validar asignación del profesor al curso en el año académico indicado
@@ -18,7 +20,12 @@ async function registrarNota(req, res) {
   });
 
   if (!asignacion) {
-    return res.status(403).json({ error: 'No tienes asignación para este curso en el año académico indicado.' });
+    return res
+      .status(403)
+      .json({
+        error:
+          'No tienes asignación para este curso en el año académico indicado.'
+      });
   }
 
   try {
@@ -28,8 +35,8 @@ async function registrarNota(req, res) {
         curso,
         bimestre,
         calificacion,
-        profesorId,
-      },
+        profesorId
+      }
     });
 
     res.status(201).json({ mensaje: 'Nota registrada.', nota: nuevaNota });
@@ -43,7 +50,7 @@ async function registrarNota(req, res) {
 async function listarNotas(req, res) {
   try {
     const notas = await prisma.nota.findMany({
-      include: { alumno: true, profesor: true },
+      include: { alumno: true, profesor: true }
     });
     res.json(notas);
   } catch (error) {
@@ -59,7 +66,7 @@ async function misNotas(req, res) {
   try {
     const notas = await prisma.nota.findMany({
       where: { alumnoId },
-      include: { profesor: true },
+      include: { profesor: true }
     });
     res.json(notas);
   } catch (error) {
@@ -71,5 +78,5 @@ async function misNotas(req, res) {
 module.exports = {
   registrarNota,
   listarNotas,
-  misNotas,
+  misNotas
 };

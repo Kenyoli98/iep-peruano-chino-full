@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { registrarNota, listarNotas, misNotas } = require('../controllers/notaController');
+const {
+  registrarNota,
+  listarNotas,
+  misNotas
+} = require('../controllers/notaController');
 const verificarToken = require('../middlewares/authMiddleware');
 const permitirRoles = require('../middlewares/roleMiddleware');
 

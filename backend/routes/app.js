@@ -11,6 +11,7 @@ const pensionesRoutes = require('./routes/pension');
 const seccionesRoutes = require('./routes/seccion');
 const usuariosRoutes = require('./routes/usuarios');
 const estadisticasRoutes = require('./routes/estadisticas');
+const preRegistroRoutes = require('./routes/preRegistro');
 
 // Middlewares globales
 app.use(express.json());
@@ -24,5 +25,6 @@ app.use('/pensiones', pensionesRoutes);
 app.use('/secciones', seccionesRoutes);
 app.use('/usuarios', usuariosRoutes);
 app.use('/estadisticas', estadisticasRoutes);
+app.use('/pre-registro', preRegistroRoutes);
 
 module.exports = app;

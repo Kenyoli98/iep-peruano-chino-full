@@ -17,8 +17,8 @@ export default function LoadingOverlay() {
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 bg-white/70 backdrop-blur-sm z-[9999] flex items-center justify-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid"></div>
+    <div className='fixed inset-0 bg-white/70 backdrop-blur-sm z-[9999] flex items-center justify-center'>
+      <div className='animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid'></div>
     </div>
   );
 }

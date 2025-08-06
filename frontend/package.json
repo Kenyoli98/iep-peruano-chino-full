@@ -1,13 +1,25 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
+  "name": "iep-frontend",
+  "version": "1.0.0",
+  "description": "Frontend web application para el sistema de gestión educativa I.E.P Peruano Chino",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "analyze": "ANALYZE=true npm run build",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
+  "keywords": ["nextjs", "react", "typescript", "tailwindcss", "education"],
+  "author": "I.E.P Peruano Chino Development Team",
+  "license": "PRIVATE",
   "dependencies": {
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
@@ -21,6 +33,10 @@
     "sonner": "^1.2.4"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.10.4",
     "@types/react": "^18.2.42",
     "@types/react-dom": "^18.2.17",
@@ -28,6 +44,8 @@
     "css-loader": "^6.8.1",
     "eslint": "^8.55.0",
     "eslint-config-next": "14.0.4",
+    "jest": "^30.0.5",
+    "jest-environment-jsdom": "^30.0.5",
     "postcss": "^8.4.32",
     "style-loader": "^3.3.3",
     "tailwindcss": "^3.3.6",

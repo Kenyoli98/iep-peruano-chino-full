@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+
+# Database
+*.db
+*.db-journal
+
+# Logs
+*.log
+
+# Environment files
+.env*
+
+# Package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Generated files
+*.min.js
+*.min.css
+
+# Documentation
+*.md
+CHANGELOG*
+
+# Data files
+*.csv
+*.json
+*.sql
+
+# Config files that should maintain their format
+.gitignore
+.eslintrc*
+tsconfig.json
+next.config.js
+tailwind.config.js
+postcss.config.js
+
+# Prisma generated files
+prisma/migrations/
+
+# IDE files
+.vscode/
+.idea/

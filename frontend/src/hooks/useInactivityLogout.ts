@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { getAuthToken, clearAuthData } from '../utils/auth';
 
 interface UseInactivityLogoutProps {
   timeout?: number; // Tiempo en milisegundos (por defecto 30 minutos)
@@ -12,9 +13,9 @@ interface NotificationState {
   message: string;
 }
 
-export function useInactivityLogout({ 
+export function useInactivityLogout({
   timeout = 30 * 60 * 1000, // 30 minutos por defecto
-  onLogout 
+  onLogout
 }: UseInactivityLogoutProps = {}) {
   const router = useRouter();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -32,17 +33,16 @@ export function useInactivityLogout({
     } else {
       // Logout por defecto
       if (typeof window !== 'undefined') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('nombre');
-        localStorage.removeItem('rol');
-        
+        clearAuthData();
+
         // Mostrar notificación de sesión expirada
         setNotification({
           show: true,
           type: 'expired',
-          message: 'Tu sesión ha expirado por inactividad. Por favor, inicia sesión nuevamente.'
+          message:
+            'Tu sesión ha expirado por inactividad. Por favor, inicia sesión nuevamente.'
         });
-        
+
         // Redirigir después de un breve delay
         setTimeout(() => {
           router.push('/login');
@@ -54,12 +54,13 @@ export function useInactivityLogout({
   const showWarning = useCallback(() => {
     if (!isWarningShownRef.current) {
       isWarningShownRef.current = true;
-      
+
       // Mostrar notificación de advertencia
       setNotification({
         show: true,
         type: 'warning',
-        message: 'Tu sesión expirará en 2 minutos por inactividad. ¿Deseas continuar?'
+        message:
+          'Tu sesión expirará en 2 minutos por inactividad. ¿Deseas continuar?'
       });
     }
   }, []);
@@ -89,13 +90,16 @@ export function useInactivityLogout({
     if (warningTimeoutRef.current) {
       clearTimeout(warningTimeoutRef.current);
     }
-    
+
     isWarningShownRef.current = false;
 
     // Configurar advertencia 2 minutos antes del logout
-    warningTimeoutRef.current = setTimeout(() => {
-      showWarning();
-    }, timeout - 2 * 60 * 1000); // 2 minutos antes
+    warningTimeoutRef.current = setTimeout(
+      () => {
+        showWarning();
+      },
+      timeout - 2 * 60 * 1000
+    ); // 2 minutos antes
 
     // Configurar logout automático
     timeoutRef.current = setTimeout(() => {
@@ -111,7 +115,7 @@ export function useInactivityLogout({
 
   useEffect(() => {
     // Solo activar si hay un token (usuario logueado)
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    const token = getAuthToken();
     if (!token) return;
 
     // Delay inicial de 5 segundos antes de activar el sistema de inactividad
@@ -119,7 +123,7 @@ export function useInactivityLogout({
       // Eventos que indican actividad del usuario
       const events = [
         'mousedown',
-        'mousemove', 
+        'mousemove',
         'keypress',
         'scroll',
         'touchstart',
@@ -146,7 +150,7 @@ export function useInactivityLogout({
     // Cleanup
     return () => {
       clearTimeout(initialDelay);
-      
+
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }

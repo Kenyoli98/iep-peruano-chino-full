@@ -52,13 +52,17 @@ const validatePhone = (phone: string): boolean => {
   return /^\d{9}$/.test(phone);
 };
 
-export const registrarUsuario = async (usuarioData: UsuarioData): Promise<ApiResponse> => {
+export const registrarUsuario = async (
+  usuarioData: UsuarioData
+): Promise<ApiResponse> => {
   // Capitalizar nombres y apellidos
   const datosCapitalizados = {
     ...usuarioData,
     nombre: capitalizarPalabra(usuarioData.nombre),
     apellido: capitalizarPalabra(usuarioData.apellido),
-    nombreApoderado: usuarioData.nombreApoderado ? capitalizarPalabra(usuarioData.nombreApoderado) : undefined
+    nombreApoderado: usuarioData.nombreApoderado
+      ? capitalizarPalabra(usuarioData.nombreApoderado)
+      : undefined
   };
 
   // Validaciones del lado del cliente
@@ -81,10 +85,17 @@ export const registrarUsuario = async (usuarioData: UsuarioData): Promise<ApiRes
   // Si es alumno, validar campos de apoderado
   if (datosCapitalizados.rol === 'alumno') {
     if (!datosCapitalizados.nombreApoderado?.trim()) {
-      throw new ValidationError('El nombre del apoderado es requerido para alumnos');
+      throw new ValidationError(
+        'El nombre del apoderado es requerido para alumnos'
+      );
     }
-    if (!datosCapitalizados.telefonoApoderado || !validatePhone(datosCapitalizados.telefonoApoderado)) {
-      throw new ValidationError('El teléfono del apoderado debe tener 9 dígitos');
+    if (
+      !datosCapitalizados.telefonoApoderado ||
+      !validatePhone(datosCapitalizados.telefonoApoderado)
+    ) {
+      throw new ValidationError(
+        'El teléfono del apoderado debe tener 9 dígitos'
+      );
     }
   }
 
@@ -96,11 +107,15 @@ export const registrarUsuario = async (usuarioData: UsuarioData): Promise<ApiRes
     return res.data;
   } catch (error: any) {
     if (error.response?.status === 401) {
-      throw new Error('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
+      throw new Error(
+        'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.'
+      );
     }
     if (error.response?.status === 409) {
       throw new Error('Ya existe un usuario con ese correo electrónico o DNI.');
     }
-    throw new Error(error.response?.data?.message || 'Error al registrar usuario');
+    throw new Error(
+      error.response?.data?.message || 'Error al registrar usuario'
+    );
   }
 };

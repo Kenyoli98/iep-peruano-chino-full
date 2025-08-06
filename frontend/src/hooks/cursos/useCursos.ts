@@ -21,7 +21,8 @@ export const useCursos = () => {
       const data = await obtenerCursos();
       setCursos(data);
     } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Error al cargar cursos';
+      const errorMessage =
+        err.response?.data?.error || 'Error al cargar cursos';
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -29,59 +30,75 @@ export const useCursos = () => {
     }
   }, []);
 
-  const createCurso = useCallback(async (cursoData: CursoInput) => {
-    try {
-      setLoading(true);
-      await crearCurso(cursoData);
-      await fetchCursos(); // Recargar la lista
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Error al crear curso';
-      throw new Error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchCursos]);
+  const createCurso = useCallback(
+    async (cursoData: CursoInput) => {
+      try {
+        setLoading(true);
+        await crearCurso(cursoData);
+        await fetchCursos(); // Recargar la lista
+      } catch (err: any) {
+        const errorMessage =
+          err.response?.data?.error || 'Error al crear curso';
+        throw new Error(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchCursos]
+  );
 
-  const updateCurso = useCallback(async (id: number, cursoData: CursoInput) => {
-    try {
-      setLoading(true);
-      await actualizarCurso(id, cursoData);
-      await fetchCursos(); // Recargar la lista
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Error al actualizar curso';
-      throw new Error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchCursos]);
+  const updateCurso = useCallback(
+    async (id: number, cursoData: CursoInput) => {
+      try {
+        setLoading(true);
+        await actualizarCurso(id, cursoData);
+        await fetchCursos(); // Recargar la lista
+      } catch (err: any) {
+        const errorMessage =
+          err.response?.data?.error || 'Error al actualizar curso';
+        throw new Error(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchCursos]
+  );
 
-  const deleteCurso = useCallback(async (id: number) => {
-    try {
-      setLoading(true);
-      await eliminarCurso(id);
-      await fetchCursos(); // Recargar la lista
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Error al eliminar curso';
-      throw new Error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchCursos]);
+  const deleteCurso = useCallback(
+    async (id: number) => {
+      try {
+        setLoading(true);
+        await eliminarCurso(id);
+        await fetchCursos(); // Recargar la lista
+      } catch (err: any) {
+        const errorMessage =
+          err.response?.data?.error || 'Error al eliminar curso';
+        throw new Error(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchCursos]
+  );
 
-  const uploadCsvCursos = useCallback(async (archivo: File) => {
-    try {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append('csv', archivo);
-      await importarCursos(formData);
-      await fetchCursos(); // Recargar la lista
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Error al importar cursos';
-      throw new Error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchCursos]);
+  const uploadCsvCursos = useCallback(
+    async (archivo: File) => {
+      try {
+        setLoading(true);
+        const formData = new FormData();
+        formData.append('csv', archivo);
+        await importarCursos(formData);
+        await fetchCursos(); // Recargar la lista
+      } catch (err: any) {
+        const errorMessage =
+          err.response?.data?.error || 'Error al importar cursos';
+        throw new Error(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchCursos]
+  );
 
   return {
     cursos,

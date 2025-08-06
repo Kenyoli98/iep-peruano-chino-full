@@ -17,7 +17,14 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
   scroll-behavior: smooth;
   overflow-x: hidden;
 }
@@ -35,7 +42,8 @@ html {
 
 /* Modern Animations */
 @keyframes gradient-x {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0%);
   }
   50% {
@@ -44,7 +52,8 @@ html {
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px) rotate(0deg);
   }
   50% {
@@ -53,7 +62,8 @@ html {
 }
 
 @keyframes float-delayed {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px) rotate(0deg);
   }
   50% {
@@ -62,7 +72,8 @@ html {
 }
 
 @keyframes float-slow {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px) scale(1);
   }
   50% {
@@ -143,7 +154,12 @@ html {
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
@@ -188,42 +204,517 @@ html {
   @apply bg-gradient-to-b from-gray-600 to-gray-800;
 }
 
-/* Estilos para impresión */
 @media print {
-  .print\:hidden,
-  button,
-  .modal-overlay,
-  .modal-content {
-    display: none !important;
-  }
-  
-  #print-content {
-    @apply block absolute inset-0 w-full h-full bg-white z-[9999];
-  }
-
-  #print-content table {
-    @apply w-full border-collapse;
-  }
-  
-  #print-content th,
-  #print-content td {
-    @apply border-2 border-black p-3 text-center text-sm;
-  }
-
-  #print-content th {
-    @apply bg-gray-100 font-bold text-base;
-  }
-
-  #print-content .bg-blue-50 {
-    @apply bg-blue-100 border-2 border-blue-500 p-2 m-0.5 rounded;
-  }
-  
   @page {
     size: A4 landscape;
-    margin: 1cm;
+    margin: 5mm;
   }
-  
-  html, body {
-    @apply bg-white text-black;
+
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html,
+  body {
+    font-family: 'Inter', sans-serif;
+    color: black !important;
+    background: white !important;
+  }
+
+  /* Ocultar todo excepto el horario durante la impresión */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Mostrar solo el grid principal del horario, sin título ni leyenda */
+  .horario-profesor,
+  .horario-profesor * {
+    visibility: visible;
+  }
+
+  /* Ocultar específicamente la leyenda y título durante la impresión */
+  .print-title {
+    display: none !important;
+  }
+
+  .horario-profesor .bg-gray-50:last-child {
+    display: none !important;
+  }
+
+  .horario-profesor > div:last-child {
+    display: none !important;
+  }
+
+  /* Posicionar el horario para que ocupe toda la página sin márgenes */
+  .horario-profesor {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    transform: scale(0.95) !important;
+    transform-origin: top left !important;
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 5px !important;
+    overflow: visible !important;
+  }
+
+  /* Eliminar restricciones de altura y scroll del contenedor principal */
+  .horario-profesor > div {
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+  }
+
+  /* Asegurar que el grid principal sea completamente visible */
+  .horario-profesor .overflow-auto {
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+  }
+
+  .horario-profesor .max-h-\[70vh\] {
+    max-height: none !important;
+    height: auto !important;
+  }
+
+  /* Asegurar que todos los elementos del horario sean visibles y con colores correctos */
+  .horario-profesor * {
+    color: black !important;
+    background-color: transparent !important;
+  }
+
+  /* Mantener los colores de fondo de las tarjetas de eventos */
+  .horario-profesor .bg-red-200 {
+    background-color: #fecaca !important;
+  }
+  .horario-profesor .bg-blue-200 {
+    background-color: #bfdbfe !important;
+  }
+  .horario-profesor .bg-green-200 {
+    background-color: #bbf7d0 !important;
+  }
+  .horario-profesor .bg-yellow-200 {
+    background-color: #fef3c7 !important;
+  }
+  .horario-profesor .bg-purple-200 {
+    background-color: #e9d5ff !important;
+  }
+  .horario-profesor .bg-pink-200 {
+    background-color: #fbcfe8 !important;
+  }
+  .horario-profesor .bg-indigo-200 {
+    background-color: #c7d2fe !important;
+  }
+  .horario-profesor .bg-orange-200 {
+    background-color: #fed7aa !important;
+  }
+  .horario-profesor .bg-teal-200 {
+    background-color: #99f6e4 !important;
+  }
+  .horario-profesor .bg-cyan-200 {
+    background-color: #a5f3fc !important;
+  }
+  .horario-profesor .bg-emerald-200 {
+    background-color: #a7f3d0 !important;
+  }
+  .horario-profesor .bg-violet-200 {
+    background-color: #ddd6fe !important;
+  }
+  .horario-profesor .bg-fuchsia-200 {
+    background-color: #f5d0fe !important;
+  }
+  .horario-profesor .bg-rose-200 {
+    background-color: #fecdd3 !important;
+  }
+  .horario-profesor .bg-amber-200 {
+    background-color: #fde68a !important;
+  }
+  .horario-profesor .bg-lime-200 {
+    background-color: #d9f99d !important;
+  }
+
+  /* Mantener el fondo gris de las celdas */
+  .horario-profesor .bg-gray-50 {
+    background-color: #f9fafb !important;
+  }
+  .horario-profesor .bg-gray-100 {
+    background-color: #f3f4f6 !important;
+  }
+
+  /* Ajustar tamaños de fuente para mejor legibilidad */
+  .horario-profesor .text-xs {
+    font-size: 10px !important;
+  }
+
+  .horario-profesor .text-sm {
+    font-size: 11px !important;
+  }
+
+  /* Asegurar que el contenedor del horario sea visible */
+  .horario-profesor .overflow-auto {
+    overflow: visible !important;
+    max-height: none !important;
+  }
+
+  /* Ajustar el grid para que se vea completo sin scrollbars */
+  .horario-profesor .grid {
+    min-width: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .horario-profesor .grid.grid-cols-6 {
+    min-width: auto !important;
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(6, 1fr) !important;
+  }
+
+  .horario-profesor .min-w-\[1200px\] {
+    min-width: auto !important;
+    width: 100% !important;
+  }
+
+  .horario-grid {
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Eliminar cualquier restricción de scroll en todos los contenedores */
+  .horario-profesor div {
+    overflow: visible !important;
+  }
+
+  .horario-profesor .relative {
+    overflow: visible !important;
+  }
+
+  /* Estilos específicos para tablas de impresión */
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    background: white !important;
+    color: black !important;
+    page-break-inside: avoid !important;
+    font-size: 10px !important;
+  }
+
+  th,
+  td {
+    border: 1px solid black !important;
+    padding: 2px !important;
+    text-align: center !important;
+    background: white !important;
+    color: black !important;
+    font-size: 9px !important;
+    page-break-inside: avoid !important;
+    white-space: nowrap !important;
+  }
+
+  .horario-profesor * {
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+  }
+
+  .horario-profesor .text-xs {
+    font-size: 8px !important;
+  }
+
+  .horario-profesor .text-sm {
+    font-size: 9px !important;
+  }
+
+  .horario-profesor .text-base {
+    font-size: 10px !important;
+  }
+
+  .horario-profesor table {
+    width: 100% !important;
+    height: auto !important;
+    font-size: 7px !important;
+  }
+
+  .horario-profesor th,
+  .horario-profesor td {
+    padding: 2px !important;
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+  }
+
+  .horario-profesor h2,
+  .horario-profesor h3 {
+    font-size: 10px !important;
+    margin: 2px 0 !important;
+  }
+
+  /* Optimización específica para la leyenda */
+  .horario-profesor .bg-gray-50 {
+    padding: 2px !important;
+  }
+
+  .horario-profesor .grid {
+    gap: 4px !important;
+  }
+
+  .horario-profesor .grid > div {
+    padding: 2px !important;
+    font-size: 8px !important;
+  }
+
+  /* Optimización del grid principal y elementos sticky */
+  .horario-profesor .grid-cols-6 {
+    min-width: auto !important;
+  }
+
+  .horario-profesor .overflow-auto {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* Asegurar que los elementos sticky funcionen correctamente en impresión */
+  .horario-profesor .sticky {
+    position: static !important;
+    top: auto !important;
+    z-index: auto !important;
+  }
+
+  /* Mantener el posicionamiento absoluto de los eventos */
+  .horario-profesor .absolute {
+    position: absolute !important;
+  }
+
+  /* Ajustes específicos para el grid de horarios */
+  .horario-profesor .grid.grid-cols-6 > div {
+    height: 45px !important;
+  }
+
+  /* Limpiar todos los bordes existentes primero */
+  .horario-profesor * {
+    border: none !important;
+    font-weight: normal !important;
+  }
+
+  /* Aplicar bordes uniformes y transparentes */
+  .horario-profesor .grid.grid-cols-6 > div {
+    height: 45px !important;
+    border-bottom: 1px solid rgba(102, 102, 102, 0.3) !important;
+    border-right: 1px solid rgba(102, 102, 102, 0.3) !important;
+    border-top: none !important;
+    border-left: none !important;
+    font-weight: normal !important;
+  }
+
+  /* Header con borde inferior más visible pero no grueso */
+  .horario-profesor .sticky.top-0 {
+    border-bottom: 1px solid rgba(51, 51, 51, 0.5) !important;
+    border-right: 1px solid rgba(102, 102, 102, 0.3) !important;
+    border-top: none !important;
+    border-left: none !important;
+    font-weight: normal !important;
+  }
+
+  /* Borde exterior del grid más sutil */
+  .horario-profesor .grid.grid-cols-6 {
+    border: 1px solid rgba(51, 51, 51, 0.4) !important;
+  }
+
+  /* Asegurar que el texto no esté en negrita */
+  .horario-profesor .text-xs,
+  .horario-profesor .font-medium,
+  .horario-profesor .font-semibold {
+    font-weight: normal !important;
+  }
+
+  .horario-profesor .grid.grid-cols-6 .sticky {
+    height: 37px !important;
+    padding: 2px !important;
+    font-size: 7px !important;
+  }
+
+  .horario-profesor .grid {
+    gap: 0.5px !important;
+  }
+
+  .horario-profesor .min-w-\[1200px\] {
+    min-width: auto !important;
+  }
+
+  /* Ajustar el contenedor de eventos para compensar el cambio de altura del header */
+  .horario-profesor .eventos-container {
+    top: 37px !important;
+    height: calc(100% - 37px) !important;
+  }
+
+  /* Aplicar escala y ajuste de posición a los eventos individuales */
+  .horario-profesor .eventos-container .absolute {
+    transform: scale(0.75) !important;
+    transform-origin: top left !important;
+  }
+
+  /* Ajustar posiciones específicas para alineación perfecta */
+  .horario-profesor .eventos-container .absolute[style*='top: 0px'] {
+    top: 0px !important;
+  }
+
+  .horario-profesor .eventos-container .absolute[style*='top: 60px'] {
+    top: 45px !important;
+  }
+
+  .horario-profesor .eventos-container .absolute[style*='top: 120px'] {
+    top: 90px !important;
+  }
+
+  .horario-profesor .eventos-container .absolute[style*='top: 180px'] {
+    top: 135px !important;
+  }
+
+  .horario-profesor .eventos-container .absolute[style*='top: 240px'] {
+    top: 180px !important;
+  }
+
+  .horario-profesor .eventos-container .absolute[style*='top: 300px'] {
+    top: 225px !important;
+  }
+
+  .horario-profesor .eventos-container .absolute[style*='top: 360px'] {
+    top: 270px !important;
+  }
+
+  .horario-profesor .eventos-container .absolute[style*='top: 420px'] {
+    top: 315px !important;
+  }
+
+  .horario-profesor .eventos-container .absolute[style*='top: 480px'] {
+    top: 360px !important;
+  }
+
+  .horario-profesor .eventos-container .absolute[style*='top: 540px'] {
+    top: 405px !important;
+  }
+
+  .horario-profesor .eventos-container .absolute[style*='top: 600px'] {
+    top: 450px !important;
+  }
+
+  .horario-profesor .eventos-container .absolute[style*='top: 660px'] {
+    top: 495px !important;
+  }
+
+  .horario-profesor .eventos-container .absolute[style*='top: 720px'] {
+    top: 540px !important;
+  }
+
+  .horario-profesor .eventos-container .absolute[style*='top: 780px'] {
+    top: 585px !important;
+  }
+
+  .horario-profesor .eventos-container .absolute[style*='top: 840px'] {
+    top: 630px !important;
+  }
+
+  .horario-profesor .eventos-container .absolute[style*='top: 900px'] {
+    top: 675px !important;
+  }
+
+  /* Estilos específicos para las tarjetas de eventos/clases */
+  .horario-profesor .absolute {
+    font-size: 8px !important;
+    line-height: 1.2 !important;
+  }
+
+  .horario-profesor .absolute > div {
+    padding: 2px !important;
+    min-height: 30px !important;
+    border-radius: 3px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+  }
+
+  .horario-profesor .absolute .font-semibold {
+    font-size: 7px !important;
+    margin-bottom: 1px !important;
+    line-height: 1.1 !important;
+    font-weight: bold !important;
+  }
+
+  .horario-profesor .absolute .text-xs {
+    font-size: 6px !important;
+    line-height: 1.1 !important;
+    opacity: 0.9 !important;
+  }
+
+  /* Ocultar solo la leyenda de colores, no las celdas del grid */
+  .horario-profesor > div:last-child {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  .horario-profesor .bg-gray-50.px-6 {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  .leyenda {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Mantener visibles las celdas de encabezado del grid */
+  .horario-profesor .grid .bg-gray-50 {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Asegurar que el contenido principal use todo el espacio disponible */
+  .horario-profesor > div:first-child {
+    margin-bottom: 0 !important;
+    height: 100% !important;
+  }
+
+  th {
+    background: #f5f5f5 !important;
+    font-weight: bold !important;
+  }
+
+  /* Asegurar que los títulos se vean */
+  h1,
+  h2,
+  h3,
+  p {
+    color: black !important;
+    background: white !important;
+  }
+
+  /* Estilos para eventos del horario */
+  .evento-horario {
+    font-size: 10px !important;
+    padding: 2px !important;
+    margin: 1px !important;
+    border: 1px solid #666 !important;
+    background: #e5e5e5 !important;
+    color: black !important;
+  }
+
+  /* Ocultar scrollbars */
+  ::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  * {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
   }
 }

@@ -27,7 +27,8 @@ export const useSecciones = () => {
       }));
       setSecciones(seccionesConvertidas);
     } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Error al cargar secciones';
+      const errorMessage =
+        err.response?.data?.error || 'Error al cargar secciones';
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -35,59 +36,75 @@ export const useSecciones = () => {
     }
   }, []);
 
-  const createSeccion = useCallback(async (seccionData: SeccionInput) => {
-    try {
-      setLoading(true);
-      await crearSeccion(seccionData);
-      await fetchSecciones(); // Recargar la lista
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Error al crear sección';
-      throw new Error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchSecciones]);
+  const createSeccion = useCallback(
+    async (seccionData: SeccionInput) => {
+      try {
+        setLoading(true);
+        await crearSeccion(seccionData);
+        await fetchSecciones(); // Recargar la lista
+      } catch (err: any) {
+        const errorMessage =
+          err.response?.data?.error || 'Error al crear sección';
+        throw new Error(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchSecciones]
+  );
 
-  const updateSeccion = useCallback(async (id: number, seccionData: SeccionInput) => {
-    try {
-      setLoading(true);
-      await actualizarSeccion(id, seccionData);
-      await fetchSecciones(); // Recargar la lista
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Error al actualizar sección';
-      throw new Error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchSecciones]);
+  const updateSeccion = useCallback(
+    async (id: number, seccionData: SeccionInput) => {
+      try {
+        setLoading(true);
+        await actualizarSeccion(id, seccionData);
+        await fetchSecciones(); // Recargar la lista
+      } catch (err: any) {
+        const errorMessage =
+          err.response?.data?.error || 'Error al actualizar sección';
+        throw new Error(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchSecciones]
+  );
 
-  const deleteSeccion = useCallback(async (id: number) => {
-    try {
-      setLoading(true);
-      await eliminarSeccion(id);
-      await fetchSecciones(); // Recargar la lista
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Error al eliminar sección';
-      throw new Error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchSecciones]);
+  const deleteSeccion = useCallback(
+    async (id: number) => {
+      try {
+        setLoading(true);
+        await eliminarSeccion(id);
+        await fetchSecciones(); // Recargar la lista
+      } catch (err: any) {
+        const errorMessage =
+          err.response?.data?.error || 'Error al eliminar sección';
+        throw new Error(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchSecciones]
+  );
 
-  const uploadCsvSecciones = useCallback(async (archivo: File) => {
-    try {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append('csv', archivo);
-      await importarSecciones(formData);
-      await fetchSecciones(); // Recargar la lista
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Error al importar secciones';
-      throw new Error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchSecciones]);
+  const uploadCsvSecciones = useCallback(
+    async (archivo: File) => {
+      try {
+        setLoading(true);
+        const formData = new FormData();
+        formData.append('csv', archivo);
+        await importarSecciones(formData);
+        await fetchSecciones(); // Recargar la lista
+      } catch (err: any) {
+        const errorMessage =
+          err.response?.data?.error || 'Error al importar secciones';
+        throw new Error(errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchSecciones]
+  );
 
   return {
     secciones,

@@ -18,9 +18,12 @@ const adminData = {
 async function crearUsuarioAdmin() {
   try {
     console.log('🚀 Creando usuario administrador...');
-    
-    const response = await axios.post('http://localhost:3001/usuarios', adminData);
-    
+
+    const response = await axios.post(
+      'http://localhost:3001/usuarios',
+      adminData
+    );
+
     if (response.status === 201) {
       console.log('✅ Usuario administrador creado exitosamente!');
       console.log('📧 Email:', adminData.email);
@@ -39,7 +42,9 @@ async function crearUsuarioAdmin() {
       }
     } else {
       console.error('❌ Error de conexión:', error.message);
-      console.log('⚠️  Asegúrate de que el servidor backend esté ejecutándose en http://localhost:3001');
+      console.log(
+        '⚠️  Asegúrate de que el servidor backend esté ejecutándose en http://localhost:3001'
+      );
     }
   }
 }

@@ -20,26 +20,16 @@ yarn-error.log*
 # Database
 /backend/prisma/dev.db
 /backend/prisma/dev.db-journal
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+*.db
+*.db-journal
 
 # Logs
 logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 
 # Runtime data
 pids
@@ -49,19 +39,48 @@ pids
 
 # Coverage directory used by tools like istanbul
 coverage/
+*.lcov
 
-# Temporary folders
-tmp/
-temp/
+# nyc test coverage
+.nyc_output
 
-# Vercel
-.vercel
+# Dependency directories
+node_modules/
+jspm_packages/
 
-# Next.js
-.next/
-out/
+# TypeScript cache
+*.tsbuildinfo
 
-# Nuxt.js
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+out
+
+# Nuxt.js build / generate output
 .nuxt
 dist
 
@@ -73,12 +92,79 @@ public
 .out
 .storybook-out
 
-# Miscellaneous
-*.tgz
-*.tar.gz
-.cache
-.parcel-cache
-.eslintcache
+# Temporary folders
+tmp/
+temp/
 
-# Local Netlify folder
-.netlify
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Debug files
+debug_*.js
+test_*.js
+test_*.html
+validate_*.js
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+
+# PDF files (documentation should be in docs/)
+*.pdf
+
+# SSH keys
+*.pub
+*.pem
+*.key
+
+# Certificates
+*.crt
+*.cert
+
+# Local development files
+.local
+.dev
+
+# Package manager lock files (keep only one)
+# yarn.lock
+# pnpm-lock.yaml
+
+# IDE specific files
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+
+# MacOS specific
+.AppleDouble
+.LSOverride
+Icon
+
+# Windows specific
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux specific
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*

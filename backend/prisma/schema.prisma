@@ -12,17 +12,31 @@ model Usuario {
   id                    Int                  @id @default(autoincrement())
   nombre                String
   apellido              String
-  email                 String               @unique
-  password              String
+  email                 String?              @unique
+  password              String?
   rol                   String
   fechaNacimiento       String?
   sexo                  String?
   nacionalidad          String?
-  dni                   String?
+  dni                   String?              @unique
   direccion             String?
   telefono              String?
   nombreApoderado       String?
   telefonoApoderado     String?
+  resetToken            String?              // Token para reset de contraseña
+  resetTokenExpiry      DateTime?            // Fecha de expiración del token
+  // Campos para sistema de pre-registro
+  codigoEstudiante      String?              @unique // Código tipo RUC para estudiantes
+  estadoRegistro        String               @default("activo") // pendiente, activo, suspendido, cancelado, expirado, verificando_email
+  fechaPreRegistro      DateTime?            // Fecha cuando admin pre-registró
+  fechaActivacion       DateTime?            // Fecha cuando se activó la cuenta
+  fechaVencimiento      DateTime?            // Fecha límite para completar registro
+  // Campos para verificación de email
+  codigoVerificacion    String?              // Código de 6 dígitos para verificar email
+  fechaExpiracionCodigo DateTime?            // Fecha de expiración del código de verificación
+  intentosLogin         Int                  @default(0) // Contador de intentos de login
+  ultimoLogin           DateTime?            // Último login exitoso
+  creadoPorAdmin        Int?                 // ID del admin que creó el pre-registro
   asignaciones          AsignacionProfesor[]
   matriculas            Matricula[]
   matriculasCreadas     Matricula[]          @relation("CreadoPor")

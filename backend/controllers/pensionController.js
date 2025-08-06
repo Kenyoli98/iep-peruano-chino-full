@@ -4,7 +4,9 @@ async function registrarPension(req, res) {
   const { alumnoId, mes, anio } = req.body;
 
   if (!alumnoId || !mes || !anio) {
-    return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+    return res
+      .status(400)
+      .json({ error: 'Todos los campos son obligatorios.' });
   }
 
   try {
@@ -12,11 +14,13 @@ async function registrarPension(req, res) {
       data: {
         alumnoId,
         mes,
-        anio,
-      },
+        anio
+      }
     });
 
-    res.status(201).json({ mensaje: 'Pensión registrada.', pension: nuevaPension });
+    res
+      .status(201)
+      .json({ mensaje: 'Pensión registrada.', pension: nuevaPension });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al registrar la pensión.' });
@@ -27,7 +31,7 @@ async function registrarPension(req, res) {
 async function listarPensiones(req, res) {
   try {
     const pensiones = await prisma.pension.findMany({
-      include: { alumno: true },
+      include: { alumno: true }
     });
     res.json(pensiones);
   } catch (error) {
@@ -42,7 +46,7 @@ async function misPensiones(req, res) {
 
   try {
     const pensiones = await prisma.pension.findMany({
-      where: { alumnoId },
+      where: { alumnoId }
     });
     res.json(pensiones);
   } catch (error) {
@@ -58,7 +62,7 @@ async function pagarPension(req, res) {
 
   try {
     const pension = await prisma.pension.findFirst({
-      where: { id: pensionId, alumnoId },
+      where: { id: pensionId, alumnoId }
     });
 
     if (!pension) {
@@ -67,10 +71,13 @@ async function pagarPension(req, res) {
 
     const pensionPagada = await prisma.pension.update({
       where: { id: pensionId },
-      data: { estadoPago: true },
+      data: { estadoPago: true }
     });
 
-    res.json({ mensaje: 'Pago registrado exitosamente.', pension: pensionPagada });
+    res.json({
+      mensaje: 'Pago registrado exitosamente.',
+      pension: pensionPagada
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al procesar el pago.' });
@@ -81,5 +88,5 @@ module.exports = {
   registrarPension,
   listarPensiones,
   misPensiones,
-  pagarPension,
+  pagarPension
 };

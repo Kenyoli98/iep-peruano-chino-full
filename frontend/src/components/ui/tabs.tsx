@@ -16,10 +16,10 @@ interface TabsProps {
 
 export default function Tabs({ tabs, activeTab, onTabChange }: TabsProps) {
   return (
-    <div className="space-y-4">
+    <div className='space-y-4'>
       {/* Tab Headers */}
-      <div className="flex space-x-4">
-        {tabs.map((tab) => (
+      <div className='flex space-x-4'>
+        {tabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
@@ -35,9 +35,9 @@ export default function Tabs({ tabs, activeTab, onTabChange }: TabsProps) {
       </div>
 
       {/* Tab Content */}
-      <div className="mt-4">
+      <div className='mt-4'>
         {tabs.find(tab => tab.id === activeTab)?.content}
       </div>
     </div>
   );
-} 
+}

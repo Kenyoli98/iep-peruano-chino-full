@@ -39,14 +39,14 @@ const ScrollToTop = () => {
         flex items-center justify-center
         group
         ${
-          isVisible
-            ? 'opacity-100 translate-y-0'
-            : 'opacity-0 translate-y-4 pointer-events-none'
-        }
+    isVisible
+      ? 'opacity-100 translate-y-0'
+      : 'opacity-0 translate-y-4 pointer-events-none'
+    }
       `}
-      aria-label="Volver al inicio"
+      aria-label='Volver al inicio'
     >
-      <ChevronUpIcon className="w-6 h-6 transition-transform duration-200 group-hover:-translate-y-0.5" />
+      <ChevronUpIcon className='w-6 h-6 transition-transform duration-200 group-hover:-translate-y-0.5' />
     </button>
   );
 };

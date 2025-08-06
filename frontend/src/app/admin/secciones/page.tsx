@@ -4,8 +4,19 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'react-hot-toast';
 import { Seccion, Filtros, SeccionInput } from '@/types/secciones';
-import { obtenerGradosPorNivel, filtrarSecciones, validarArchivoCsv, manejarErrorApi } from '@/utils/secciones';
-import { obtenerSecciones, crearSeccion, actualizarSeccion, eliminarSeccion, importarSecciones } from '@/services/seccionesService';
+import {
+  obtenerGradosPorNivel,
+  filtrarSecciones,
+  validarArchivoCsv,
+  manejarErrorApi
+} from '@/utils/secciones';
+import {
+  obtenerSecciones,
+  crearSeccion,
+  actualizarSeccion,
+  eliminarSeccion,
+  importarSecciones
+} from '@/services/seccionesService';
 import LoadingSpinner from '@/components/secciones/LoadingSpinner';
 import EmptyState from '@/components/secciones/EmptyState';
 import Breadcrumb from '@/components/secciones/Breadcrumb';
@@ -109,19 +120,25 @@ const SeccionesAdminPage = () => {
   };
 
   // Estados locales
-  const [filtros, setFiltros] = useState<Filtros>({ nombre: '', nivel: '', grado: '' });
+  const [filtros, setFiltros] = useState<Filtros>({
+    nombre: '',
+    nivel: '',
+    grado: ''
+  });
   const [seccionesFiltradas, setSeccionesFiltradas] = useState<Seccion[]>([]);
   const [busquedaRealizada, setBusquedaRealizada] = useState(false);
-  
+
   // Estados de modales
   const [modalEliminar, setModalEliminar] = useState(false);
   const [modalCrear, setModalCrear] = useState(false);
   const [modalEditar, setModalEditar] = useState(false);
   const [modalCsv, setModalCsv] = useState(false);
   const [modalConfiguracion, setModalConfiguracion] = useState(false);
-  
+
   // Estados de datos
-  const [seccionAEliminar, setSeccionAEliminar] = useState<Seccion | null>(null);
+  const [seccionAEliminar, setSeccionAEliminar] = useState<Seccion | null>(
+    null
+  );
   const [seccionEditando, setSeccionEditando] = useState<Seccion | null>(null);
   const [nuevaSeccion, setNuevaSeccion] = useState<SeccionInput>({
     nombre: '',
@@ -129,17 +146,17 @@ const SeccionesAdminPage = () => {
     grado: ''
   });
   const [archivo, setArchivo] = useState<File | null>(null);
-  
+
   // Estados de paginación
   const [paginaActual, setPaginaActual] = useState(1);
   const registrosPorPagina = 10;
-  
+
   // Estados de carga
   const [loadingCrear, setLoadingCrear] = useState(false);
   const [loadingEditar, setLoadingEditar] = useState(false);
   const [loadingEliminar, setLoadingEliminar] = useState(false);
   const [loadingCsv, setLoadingCsv] = useState(false);
-  
+
   // Estado para configuración de grados
   const [gradosPorNivel, setGradosPorNivel] = useState(obtenerGradosPorNivel());
 
@@ -151,7 +168,7 @@ const SeccionesAdminPage = () => {
   }, [isAuthenticated, fetchSecciones]);
 
   useEffect(() => {
-    const seccionesParaMostrar = busquedaRealizada 
+    const seccionesParaMostrar = busquedaRealizada
       ? filtrarSecciones(secciones, filtros)
       : secciones;
     setSeccionesFiltradas(seccionesParaMostrar);
@@ -164,11 +181,16 @@ const SeccionesAdminPage = () => {
     const seccionesEncontradas = filtrarSecciones(secciones, filtros);
     setSeccionesFiltradas(seccionesEncontradas);
     setPaginaActual(1);
-    
-    if (seccionesEncontradas.length === 0 && (filtros.nombre.trim() || filtros.nivel || filtros.grado.trim())) {
+
+    if (
+      seccionesEncontradas.length === 0 &&
+      (filtros.nombre.trim() || filtros.nivel || filtros.grado.trim())
+    ) {
       toast.error('No se encontraron secciones que coincidan con los filtros');
     } else if (seccionesEncontradas.length > 0) {
-      toast.success(`Se encontraron ${seccionesEncontradas.length} sección(es)`);
+      toast.success(
+        `Se encontraron ${seccionesEncontradas.length} sección(es)`
+      );
     }
   };
 
@@ -189,7 +211,11 @@ const SeccionesAdminPage = () => {
   // Handlers CRUD
   const handleCrearSeccion = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nuevaSeccion.nombre.trim() || !nuevaSeccion.nivel || !nuevaSeccion.grado.trim()) {
+    if (
+      !nuevaSeccion.nombre.trim() ||
+      !nuevaSeccion.nivel ||
+      !nuevaSeccion.grado.trim()
+    ) {
       toast.error('Todos los campos son obligatorios');
       return;
     }
@@ -233,7 +259,12 @@ const SeccionesAdminPage = () => {
 
   const confirmarEditarSeccion = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!seccionEditando || !seccionEditando.nombre.trim() || !seccionEditando.nivel || !seccionEditando.grado.trim()) {
+    if (
+      !seccionEditando ||
+      !seccionEditando.nombre.trim() ||
+      !seccionEditando.nivel ||
+      !seccionEditando.grado.trim()
+    ) {
       toast.error('Todos los campos son obligatorios');
       return;
     }
@@ -280,7 +311,9 @@ const SeccionesAdminPage = () => {
   };
 
   // Handler para configuración de grados
-  const handleGuardarConfiguracion = (nuevaConfiguracion: Record<string, string[]>) => {
+  const handleGuardarConfiguracion = (
+    nuevaConfiguracion: Record<string, string[]>
+  ) => {
     setGradosPorNivel(nuevaConfiguracion);
     toast.success('Configuración de grados actualizada exitosamente');
   };
@@ -299,8 +332,8 @@ const SeccionesAdminPage = () => {
 
   if (isAuthenticated === null || (loading && secciones.length === 0)) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className='min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
           <LoadingSpinner />
         </div>
       </div>
@@ -313,22 +346,44 @@ const SeccionesAdminPage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center py-16">
-            <div className="mx-auto w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-6 shadow-lg">
-              <svg className="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+      <div className='min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+          <div className='text-center py-16'>
+            <div className='mx-auto w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-6 shadow-lg'>
+              <svg
+                className='w-12 h-12 text-red-600'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z'
+                />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Error al cargar secciones</h3>
-            <p className="text-gray-500 mb-6">{error}</p>
+            <h3 className='text-xl font-semibold text-gray-900 mb-2'>
+              Error al cargar secciones
+            </h3>
+            <p className='text-gray-500 mb-6'>{error}</p>
             <button
               onClick={() => fetchSecciones()}
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+              className='inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200'
             >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              <svg
+                className='w-4 h-4 mr-2'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15'
+                />
               </svg>
               Reintentar
             </button>
@@ -339,56 +394,100 @@ const SeccionesAdminPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className='min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
         {/* Breadcrumb */}
         <Breadcrumb />
-        
+
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 mb-8 text-white relative overflow-hidden">
-          <div className="relative z-10">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-              <div className="mb-6 md:mb-0">
-                <h1 className="text-3xl md:text-4xl font-bold mb-2">Gestión de Secciones</h1>
-                <p className="text-slate-100 text-lg">Administra las secciones académicas de la institución</p>
-                <div className="flex items-center mt-4 space-x-6">
-                  <div className="flex items-center">
-                    <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center mr-2">
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <div className='bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 mb-8 text-white relative overflow-hidden'>
+          <div className='relative z-10'>
+            <div className='flex flex-col md:flex-row md:items-center md:justify-between'>
+              <div className='mb-6 md:mb-0'>
+                <h1 className='text-3xl md:text-4xl font-bold mb-2'>
+                  Gestión de Secciones
+                </h1>
+                <p className='text-slate-100 text-lg'>
+                  Administra las secciones académicas de la institución
+                </p>
+                <div className='flex items-center mt-4 space-x-6'>
+                  <div className='flex items-center'>
+                    <div className='w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center mr-2'>
+                      <svg
+                        className='w-4 h-4'
+                        fill='currentColor'
+                        viewBox='0 0 20 20'
+                      >
+                        <path d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' />
                       </svg>
                     </div>
-                    <span className="text-sm font-medium">{secciones.length} Secciones Registradas</span>
+                    <span className='text-sm font-medium'>
+                      {secciones.length} Secciones Registradas
+                    </span>
                   </div>
-
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className='flex flex-col sm:flex-row gap-3'>
                 <button
                   onClick={() => setModalConfiguracion(true)}
-                  className="inline-flex items-center px-6 py-3 bg-white/10 backdrop-blur-sm text-white rounded-xl hover:bg-white/20 transition-all duration-200 border border-white/20"
+                  className='inline-flex items-center px-6 py-3 bg-white/10 backdrop-blur-sm text-white rounded-xl hover:bg-white/20 transition-all duration-200 border border-white/20'
                 >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <svg
+                    className='w-5 h-5 mr-2'
+                    fill='none'
+                    stroke='currentColor'
+                    viewBox='0 0 24 24'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth={2}
+                      d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'
+                    />
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth={2}
+                      d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'
+                    />
                   </svg>
                   Configurar Grados
                 </button>
                 <button
                   onClick={() => setModalCsv(true)}
-                  className="inline-flex items-center px-6 py-3 bg-white/10 backdrop-blur-sm text-white rounded-xl hover:bg-white/20 transition-all duration-200 border border-white/20"
+                  className='inline-flex items-center px-6 py-3 bg-white/10 backdrop-blur-sm text-white rounded-xl hover:bg-white/20 transition-all duration-200 border border-white/20'
                 >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                  <svg
+                    className='w-5 h-5 mr-2'
+                    fill='none'
+                    stroke='currentColor'
+                    viewBox='0 0 24 24'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth={2}
+                      d='M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10'
+                    />
                   </svg>
                   Importar CSV
                 </button>
                 <button
                   onClick={() => setModalCrear(true)}
-                  className="inline-flex items-center px-6 py-3 bg-white text-blue-600 rounded-xl hover:bg-blue-50 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                  className='inline-flex items-center px-6 py-3 bg-white text-blue-600 rounded-xl hover:bg-blue-50 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
                 >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  <svg
+                    className='w-5 h-5 mr-2'
+                    fill='none'
+                    stroke='currentColor'
+                    viewBox='0 0 24 24'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth={2}
+                      d='M12 4v16m8-8H4'
+                    />
                   </svg>
                   Nueva Sección
                 </button>
@@ -401,7 +500,11 @@ const SeccionesAdminPage = () => {
         <FiltrosSection
           filtros={filtros}
           setFiltros={setFiltros}
-          onBuscar={filtros.nombre.trim() || filtros.nivel || filtros.grado.trim() ? handleBuscar : handleBuscarVacio}
+          onBuscar={
+            filtros.nombre.trim() || filtros.nivel || filtros.grado.trim()
+              ? handleBuscar
+              : handleBuscarVacio
+          }
           onLimpiar={handleLimpiar}
           loading={loading}
         />
@@ -419,7 +522,7 @@ const SeccionesAdminPage = () => {
               onEditar={handleEditarSeccion}
               loading={loading}
             />
-            
+
             {totalPaginas > 1 && (
               <Paginacion
                 paginaActual={paginaActual}

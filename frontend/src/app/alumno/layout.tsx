@@ -3,11 +3,17 @@
 import { useAuth } from '../../hooks/useAuth';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { FaSignOutAlt, FaUser, FaMoneyBillWave, FaClipboardList, FaCalendarAlt } from 'react-icons/fa';
+import {
+  FaSignOutAlt,
+  FaUser,
+  FaMoneyBillWave,
+  FaClipboardList,
+  FaCalendarAlt
+} from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 
 export default function AlumnoLayout({
-  children,
+  children
 }: {
   children: React.ReactNode;
 }) {
@@ -35,29 +41,29 @@ export default function AlumnoLayout({
 
   if (!mounted) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        <span className="ml-3 text-gray-600">Cargando...</span>
+      <div className='flex items-center justify-center min-h-screen'>
+        <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600'></div>
+        <span className='ml-3 text-gray-600'>Cargando...</span>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className='min-h-screen bg-gray-50'>
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-xl font-semibold text-gray-900">
+      <header className='bg-white shadow-sm border-b border-gray-200'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='flex justify-between items-center h-16'>
+            <div className='flex items-center space-x-4'>
+              <h1 className='text-xl font-semibold text-gray-900'>
                 Portal Estudiante
               </h1>
-              <span className="text-gray-500">|</span>
-              <span className="text-gray-600">Bienvenido, {nombre}</span>
+              <span className='text-gray-500'>|</span>
+              <span className='text-gray-600'>Bienvenido, {nombre}</span>
             </div>
             <button
               onClick={handleLogout}
-              className="flex items-center space-x-2 text-gray-600 hover:text-red-600 transition-colors"
+              className='flex items-center space-x-2 text-gray-600 hover:text-red-600 transition-colors'
             >
               <FaSignOutAlt />
               <span>Cerrar Sesión</span>
@@ -67,28 +73,28 @@ export default function AlumnoLayout({
       </header>
 
       {/* Navigation */}
-      <nav className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-8">
+      <nav className='bg-white border-b border-gray-200'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='flex space-x-8'>
             <Link
-              href="/alumno/pensiones"
-              className="border-b-2 border-transparent hover:border-blue-500 py-4 px-1 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+              href='/alumno/pensiones'
+              className='border-b-2 border-transparent hover:border-blue-500 py-4 px-1 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors'
             >
-              <FaMoneyBillWave className="inline mr-2" />
+              <FaMoneyBillWave className='inline mr-2' />
               Mis Pensiones
             </Link>
             <Link
-              href="/alumno/notas"
-              className="border-b-2 border-transparent hover:border-blue-500 py-4 px-1 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+              href='/alumno/notas'
+              className='border-b-2 border-transparent hover:border-blue-500 py-4 px-1 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors'
             >
-              <FaClipboardList className="inline mr-2" />
+              <FaClipboardList className='inline mr-2' />
               Mis Notas
             </Link>
             <Link
-              href="/alumno/horario"
-              className="border-b-2 border-transparent hover:border-blue-500 py-4 px-1 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+              href='/alumno/horario'
+              className='border-b-2 border-transparent hover:border-blue-500 py-4 px-1 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors'
             >
-              <FaCalendarAlt className="inline mr-2" />
+              <FaCalendarAlt className='inline mr-2' />
               Mi Horario
             </Link>
           </div>
@@ -96,7 +102,7 @@ export default function AlumnoLayout({
       </nav>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <main className='max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8'>
         {children}
       </main>
     </div>

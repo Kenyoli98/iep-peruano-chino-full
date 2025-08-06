@@ -21,17 +21,23 @@ export const obtenerProfesores = async (): Promise<Profesor[]> => {
 
     // Asegurar que siempre devolvemos un array y solo usuarios con rol profesor
     if (!res.data) return [];
-    
-    const usuarios = Array.isArray(res.data) ? res.data : res.data.usuarios || [];
+
+    const usuarios = Array.isArray(res.data)
+      ? res.data
+      : res.data.usuarios || [];
     // Filtro adicional por si acaso
-    const profesores = usuarios.filter((user: Profesor) => user.rol === 'profesor');
-    
+    const profesores = usuarios.filter(
+      (user: Profesor) => user.rol === 'profesor'
+    );
+
     return profesores;
   } catch (error: any) {
     console.error('Error en obtenerProfesores:', error);
     if (error.response?.status === 401) {
-      throw new Error('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
+      throw new Error(
+        'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.'
+      );
     }
     throw new Error('Error al obtener la lista de profesores');
   }
-}; 
+};

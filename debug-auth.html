@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug de Autenticación</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .info-box {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .error-box {
+            background: #ffebee;
+            border: 1px solid #f44336;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success-box {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        button {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #1976d2;
+        }
+        .clear-btn {
+            background: #f44336;
+        }
+        .clear-btn:hover {
+            background: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Debug de Autenticación - Sistema de Pre-registros</h1>
+        <p>Esta herramienta te ayudará a verificar tu estado de autenticación y permisos.</p>
+        
+        <div id="authStatus"></div>
+        
+        <div style="margin: 20px 0;">
+            <button onclick="checkAuth()">🔄 Verificar Autenticación</button>
+            <button onclick="clearAuth()" class="clear-btn">🗑️ Limpiar Datos de Autenticación</button>
+            <button onclick="goToLogin()">🔑 Ir a Login</button>
+            <button onclick="goToPreRegistros()">📝 Ir a Pre-registros</button>
+        </div>
+        
+        <div class="info-box">
+            <h3>ℹ️ Información:</h3>
+            <ul>
+                <li>Para acceder a pre-registros necesitas ser <strong>administrador</strong></li>
+                <li>Tu rol debe estar guardado como 'admin' en localStorage</li>
+                <li>Debes tener un token válido de autenticación</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function checkAuth() {
+            const statusDiv = document.getElementById('authStatus');
+            
+            // Obtener datos de localStorage
+            const token = localStorage.getItem('token');
+            const rol = localStorage.getItem('rol');
+            const nombre = localStorage.getItem('nombre');
+            
+            // Obtener datos de sessionStorage
+            const sessionToken = sessionStorage.getItem('token');
+            
+            let html = '<h3>📊 Estado de Autenticación:</h3>';
+            
+            if (!token && !sessionToken) {
+                html += '<div class="error-box"><strong>❌ No autenticado:</strong> No se encontró token de autenticación</div>';
+            } else {
+                html += '<div class="success-box"><strong>✅ Token encontrado:</strong> ' + (token ? 'localStorage' : 'sessionStorage') + '</div>';
+            }
+            
+            if (!rol) {
+                html += '<div class="error-box"><strong>❌ Sin rol:</strong> No se encontró información de rol</div>';
+            } else if (rol === 'admin') {
+                html += '<div class="success-box"><strong>✅ Rol de administrador:</strong> ' + rol + '</div>';
+            } else {
+                html += '<div class="error-box"><strong>❌ Rol insuficiente:</strong> ' + rol + ' (necesitas ser "admin")</div>';
+            }
+            
+            if (nombre) {
+                html += '<div class="info-box"><strong>👤 Usuario:</strong> ' + nombre + '</div>';
+            }
+            
+            // Mostrar todos los datos de localStorage
+            html += '<h4>🗄️ Datos en localStorage:</h4>';
+            html += '<div class="info-box">';
+            html += '<strong>Token:</strong> ' + (token ? token.substring(0, 20) + '...' : 'No encontrado') + '<br>';
+            html += '<strong>Rol:</strong> ' + (rol || 'No encontrado') + '<br>';
+            html += '<strong>Nombre:</strong> ' + (nombre || 'No encontrado');
+            html += '</div>';
+            
+            // Verificar si puede acceder a pre-registros
+            const canAccess = (token || sessionToken) && rol === 'admin';
+            if (canAccess) {
+                html += '<div class="success-box"><strong>🎉 ¡Puedes acceder a pre-registros!</strong></div>';
+            } else {
+                html += '<div class="error-box"><strong>🚫 No puedes acceder a pre-registros</strong><br>';
+                if (!token && !sessionToken) html += '• Necesitas iniciar sesión<br>';
+                if (rol !== 'admin') html += '• Necesitas permisos de administrador<br>';
+                html += '</div>';
+            }
+            
+            statusDiv.innerHTML = html;
+        }
+        
+        function clearAuth() {
+            if (confirm('¿Estás seguro de que quieres limpiar todos los datos de autenticación?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('rol');
+                localStorage.removeItem('nombre');
+                localStorage.removeItem('rememberedEmail');
+                sessionStorage.removeItem('token');
+                
+                alert('✅ Datos de autenticación limpiados');
+                checkAuth();
+            }
+        }
+        
+        function goToLogin() {
+            window.location.href = 'http://localhost:3000/login';
+        }
+        
+        function goToPreRegistros() {
+            window.location.href = 'http://localhost:3000/admin/pre-registros';
+        }
+        
+        // Verificar automáticamente al cargar la página
+        window.onload = function() {
+            checkAuth();
+        };
+    </script>
+</body>
+</html>

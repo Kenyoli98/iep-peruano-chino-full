@@ -1,0 +1,56 @@
+# Dockerfile para desarrollo con hot reloading
+FROM node:18-alpine
+
+# Instalar dependencias del sistema
+RUN apk add --no-cache \
+    sqlite \
+    dumb-init \
+    git
+
+# Crear usuario no-root
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+
+# Crear directorio de trabajo
+WORKDIR /app
+
+# Copiar archivos de configuración del proyecto raíz
+COPY package*.json ./
+RUN npm install
+
+# Copiar archivos de configuración del backend
+COPY backend/package*.json ./backend/
+WORKDIR /app/backend
+RUN npm install
+
+# Copiar archivos de configuración del frontend
+WORKDIR /app
+COPY frontend/package*.json ./frontend/
+WORKDIR /app/frontend
+RUN npm install
+
+# Volver al directorio raíz
+WORKDIR /app
+
+# Crear directorios necesarios
+RUN mkdir -p backend/prisma backend/logs backend/uploads frontend/.next
+RUN chown -R nextjs:nodejs backend/prisma backend/logs backend/uploads frontend/.next
+
+# Copiar script de desarrollo
+COPY --chown=nextjs:nodejs docker-entrypoint-dev.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint-dev.sh
+
+# Cambiar a usuario no-root
+USER nextjs
+
+# Exponer puertos
+EXPOSE 3000 5000
+
+# Variables de entorno para desarrollo
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV CHOKIDAR_USEPOLLING=true
+
+# Comando de inicio
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["/usr/local/bin/docker-entrypoint-dev.sh"]

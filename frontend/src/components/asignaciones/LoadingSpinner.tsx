@@ -4,18 +4,20 @@ interface LoadingSpinnerProps {
   message?: string;
 }
 
-const LoadingSpinner = ({ message = "Cargando asignaciones..." }: LoadingSpinnerProps) => {
+const LoadingSpinner = ({
+  message = 'Cargando asignaciones...'
+}: LoadingSpinnerProps) => {
   return (
-    <div className="flex flex-col items-center justify-center py-16">
-      <div className="relative">
-        <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
-        <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-r-blue-400 rounded-full animate-spin animation-delay-150"></div>
+    <div className='flex flex-col items-center justify-center py-16'>
+      <div className='relative'>
+        <div className='w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin'></div>
+        <div className='absolute inset-0 w-16 h-16 border-4 border-transparent border-r-blue-400 rounded-full animate-spin animation-delay-150'></div>
       </div>
-      <p className="mt-4 text-gray-600 font-medium">{message}</p>
-      <div className="mt-2 flex space-x-1">
-        <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
-        <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce animation-delay-100"></div>
-        <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce animation-delay-200"></div>
+      <p className='mt-4 text-gray-600 font-medium'>{message}</p>
+      <div className='mt-2 flex space-x-1'>
+        <div className='w-2 h-2 bg-blue-600 rounded-full animate-bounce'></div>
+        <div className='w-2 h-2 bg-blue-600 rounded-full animate-bounce animation-delay-100'></div>
+        <div className='w-2 h-2 bg-blue-600 rounded-full animate-bounce animation-delay-200'></div>
       </div>
     </div>
   );

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Error 401 - Pre-registro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .error {
+            background-color: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success {
+            background-color: #efe;
+            border: 1px solid #cfc;
+            color: #3c3;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .info {
+            background-color: #eef;
+            border: 1px solid #ccf;
+            color: #33c;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        button {
+            background-color: #007cba;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #005a87;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug Error 401 - Pre-registro de Estudiantes</h1>
+    
+    <div class="container">
+        <h2>1. Verificar Estado de Autenticación</h2>
+        <button onclick="checkAuthStatus()">Verificar Autenticación</button>
+        <div id="authStatus"></div>
+    </div>
+
+    <div class="container">
+        <h2>2. Probar Login de Administrador</h2>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" value="admin@test.com" placeholder="admin@test.com">
+        </div>
+        <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" value="admin123" placeholder="admin123">
+        </div>
+        <button onclick="testLogin()">Hacer Login</button>
+        <div id="loginResult"></div>
+    </div>
+
+    <div class="container">
+        <h2>3. Probar Creación de Pre-registro</h2>
+        <div class="grid">
+            <div>
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" value="Juan" placeholder="Juan">
+                </div>
+                <div class="form-group">
+                    <label for="apellido">Apellido:</label>
+                    <input type="text" id="apellido" value="Pérez" placeholder="Pérez">
+                </div>
+                <div class="form-group">
+                    <label for="dni">DNI:</label>
+                    <input type="text" id="dni" value="12345678" placeholder="12345678">
+                </div>
+            </div>
+            <div>
+                <div class="form-group">
+                    <label for="email_estudiante">Email (opcional):</label>
+                    <input type="email" id="email_estudiante" value="juan.perez@test.com" placeholder="juan.perez@test.com">
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono (opcional):</label>
+                    <input type="text" id="telefono" value="987654321" placeholder="987654321">
+                </div>
+                <div class="form-group">
+                    <label for="grado">Grado:</label>
+                    <select id="grado">
+                        <option value="1">1° Primaria</option>
+                        <option value="2">2° Primaria</option>
+                        <option value="3">3° Primaria</option>
+                        <option value="4">4° Primaria</option>
+                        <option value="5">5° Primaria</option>
+                        <option value="6">6° Primaria</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <button onclick="testPreRegistration()">Crear Pre-registro</button>
+        <div id="preRegistrationResult"></div>
+    </div>
+
+    <div class="container">
+        <h2>4. Probar Endpoints Administrativos</h2>
+        <button onclick="testGetPreRegistrations()">Listar Pre-registros</button>
+        <button onclick="testGetStatistics()">Obtener Estadísticas</button>
+        <div id="adminEndpointsResult"></div>
+    </div>
+
+    <div class="container">
+        <h2>5. Información de Debug</h2>
+        <button onclick="showDebugInfo()">Mostrar Info de Debug</button>
+        <div id="debugInfo"></div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3001';
+        
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            element.innerHTML += `<div class="${className}">${message}</div>`;
+        }
+        
+        function clearLog(elementId) {
+            document.getElementById(elementId).innerHTML = '';
+        }
+
+        async function checkAuthStatus() {
+            clearLog('authStatus');
+            
+            const token = localStorage.getItem('token');
+            const rol = localStorage.getItem('rol');
+            const usuario = localStorage.getItem('usuario');
+            
+            if (!token) {
+                log('authStatus', '❌ No hay token de autenticación en localStorage', 'error');
+                return;
+            }
+            
+            log('authStatus', `✅ Token encontrado: ${token.substring(0, 20)}...`, 'success');
+            log('authStatus', `👤 Rol: ${rol}`, 'info');
+            log('authStatus', `📧 Usuario: ${usuario}`, 'info');
+            
+            // Verificar si el token es válido
+            try {
+                const response = await fetch(`${API_BASE_URL}/pre-registro/admin/estadisticas`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    log('authStatus', '✅ Token válido - Acceso a endpoints admin exitoso', 'success');
+                } else {
+                    const errorData = await response.json().catch(() => ({ message: 'Error desconocido' }));
+                    log('authStatus', `❌ Token inválido - Status: ${response.status}, Error: ${errorData.message || errorData.error}`, 'error');
+                }
+            } catch (error) {
+                log('authStatus', `❌ Error de conexión: ${error.message}`, 'error');
+            }
+        }
+
+        async function testLogin() {
+            clearLog('loginResult');
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                log('loginResult', '❌ Por favor ingresa email y contraseña', 'error');
+                return;
+            }
+            
+            try {
+                log('loginResult', '🔄 Intentando login...', 'info');
+                
+                const response = await fetch(`${API_BASE_URL}/usuarios/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('rol', data.usuario.rol);
+                    localStorage.setItem('usuario', data.usuario.email);
+                    
+                    log('loginResult', '✅ Login exitoso', 'success');
+                    log('loginResult', `Token: ${data.token.substring(0, 20)}...`, 'info');
+                    log('loginResult', `Rol: ${data.usuario.rol}`, 'info');
+                } else {
+                    log('loginResult', `❌ Error en login: ${data.message || data.error}`, 'error');
+                }
+            } catch (error) {
+                log('loginResult', `❌ Error de conexión: ${error.message}`, 'error');
+            }
+        }
+
+        async function testPreRegistration() {
+            clearLog('preRegistrationResult');
+            
+            const token = localStorage.getItem('token');
+            if (!token) {
+                log('preRegistrationResult', '❌ No hay token. Haz login primero.', 'error');
+                return;
+            }
+            
+            const preRegistrationData = {
+                nombre: document.getElementById('nombre').value,
+                apellido: document.getElementById('apellido').value,
+                dni: document.getElementById('dni').value,
+                email: document.getElementById('email_estudiante').value || undefined,
+                telefono: document.getElementById('telefono').value || undefined,
+                grado: parseInt(document.getElementById('grado').value)
+            };
+            
+            log('preRegistrationResult', '🔄 Enviando datos de pre-registro...', 'info');
+            log('preRegistrationResult', `Datos: ${JSON.stringify(preRegistrationData, null, 2)}`, 'info');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/pre-registro/admin/crear`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(preRegistrationData)
+                });
+                
+                log('preRegistrationResult', `📡 Status de respuesta: ${response.status}`, 'info');
+                log('preRegistrationResult', `📡 Headers de respuesta: ${JSON.stringify(Object.fromEntries(response.headers.entries()), null, 2)}`, 'info');
+                
+                const responseText = await response.text();
+                log('preRegistrationResult', `📡 Respuesta raw: ${responseText}`, 'info');
+                
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch (e) {
+                    log('preRegistrationResult', '❌ Respuesta no es JSON válido', 'error');
+                    return;
+                }
+                
+                if (response.ok) {
+                    log('preRegistrationResult', '✅ Pre-registro creado exitosamente', 'success');
+                    log('preRegistrationResult', `Código de estudiante: ${data.data?.codigoEstudiante}`, 'success');
+                } else {
+                    log('preRegistrationResult', `❌ Error ${response.status}: ${data.message || data.error}`, 'error');
+                    
+                    if (response.status === 401) {
+                        log('preRegistrationResult', '🔍 ERROR 401 DETECTADO - Analizando...', 'error');
+                        log('preRegistrationResult', `Token enviado: ${token.substring(0, 20)}...`, 'info');
+                        log('preRegistrationResult', `Headers enviados: Authorization: Bearer ${token.substring(0, 20)}...`, 'info');
+                    }
+                }
+            } catch (error) {
+                log('preRegistrationResult', `❌ Error de conexión: ${error.message}`, 'error');
+            }
+        }
+
+        async function testGetPreRegistrations() {
+            clearLog('adminEndpointsResult');
+            
+            const token = localStorage.getItem('token');
+            if (!token) {
+                log('adminEndpointsResult', '❌ No hay token. Haz login primero.', 'error');
+                return;
+            }
+            
+            try {
+                log('adminEndpointsResult', '🔄 Obteniendo lista de pre-registros...', 'info');
+                
+                const response = await fetch(`${API_BASE_URL}/pre-registro/admin/listar`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log('adminEndpointsResult', '✅ Lista obtenida exitosamente', 'success');
+                    log('adminEndpointsResult', `Total de registros: ${data.data?.registros?.length || 0}`, 'info');
+                } else {
+                    log('adminEndpointsResult', `❌ Error ${response.status}: ${data.message || data.error}`, 'error');
+                }
+            } catch (error) {
+                log('adminEndpointsResult', `❌ Error de conexión: ${error.message}`, 'error');
+            }
+        }
+
+        async function testGetStatistics() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                log('adminEndpointsResult', '❌ No hay token. Haz login primero.', 'error');
+                return;
+            }
+            
+            try {
+                log('adminEndpointsResult', '🔄 Obteniendo estadísticas...', 'info');
+                
+                const response = await fetch(`${API_BASE_URL}/pre-registro/admin/estadisticas`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log('adminEndpointsResult', '✅ Estadísticas obtenidas exitosamente', 'success');
+                    log('adminEndpointsResult', `<pre>${JSON.stringify(data.data, null, 2)}</pre>`, 'info');
+                } else {
+                    log('adminEndpointsResult', `❌ Error ${response.status}: ${data.message || data.error}`, 'error');
+                }
+            } catch (error) {
+                log('adminEndpointsResult', `❌ Error de conexión: ${error.message}`, 'error');
+            }
+        }
+
+        function showDebugInfo() {
+            clearLog('debugInfo');
+            
+            log('debugInfo', '🔧 Información de Debug:', 'info');
+            log('debugInfo', `URL del API: ${API_BASE_URL}`, 'info');
+            log('debugInfo', `User Agent: ${navigator.userAgent}`, 'info');
+            log('debugInfo', `Fecha/Hora: ${new Date().toISOString()}`, 'info');
+            
+            // Información del localStorage
+            const keys = ['token', 'rol', 'usuario'];
+            keys.forEach(key => {
+                const value = localStorage.getItem(key);
+                if (value) {
+                    const displayValue = key === 'token' ? `${value.substring(0, 20)}...` : value;
+                    log('debugInfo', `localStorage.${key}: ${displayValue}`, 'info');
+                } else {
+                    log('debugInfo', `localStorage.${key}: (no definido)`, 'info');
+                }
+            });
+            
+            // Test de conectividad
+            fetch(`${API_BASE_URL}/health`)
+                .then(response => {
+                    if (response.ok) {
+                        log('debugInfo', '✅ Conectividad con backend: OK', 'success');
+                    } else {
+                        log('debugInfo', `❌ Conectividad con backend: Error ${response.status}`, 'error');
+                    }
+                })
+                .catch(error => {
+                    log('debugInfo', `❌ Conectividad con backend: ${error.message}`, 'error');
+                });
+        }
+        
+        // Auto-verificar al cargar la página
+        window.onload = function() {
+            checkAuthStatus();
+        };
+    </script>
+</body>
+</html>

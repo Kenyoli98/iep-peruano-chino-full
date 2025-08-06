@@ -76,7 +76,8 @@ export const useScrollProgress = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const totalHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
       const progress = (window.pageYOffset / totalHeight) * 100;
       setScrollProgress(Math.min(progress, 100));
     };
